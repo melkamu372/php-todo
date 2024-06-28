@@ -46,10 +46,17 @@ pipeline {
             }
         }
 
+        stage('Download PHPUnit') {
+            steps {
+                sh 'wget -O phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar'
+                sh 'chmod +x phpunit'
+            }
+        }
+
         stage('Run Unit Tests') {
             steps {
-                // Execute PHPUnit tests
-                sh './vendor/bin/phpunit --no-coverage'
+                // Execute PHPUnit tests using the downloaded PHPUnit version
+                sh './phpunit --configuration phpunit.xml'
             }
         }
       
