@@ -53,6 +53,12 @@ pipeline {
             }
         }
 
+        stage('Install PHPLOC') {
+            steps {
+                sh 'composer global require sebastian/phploc'
+            }
+        }
+
         stage('Run Unit Tests') {
             steps {
                 // Execute PHPUnit tests using the downloaded PHPUnit version
@@ -63,7 +69,7 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 // Execute PHPLOC for code analysis
-                sh 'phploc app/ --log-csv build/logs/phploc.csv'
+                sh '~/.composer/vendor/bin/phploc app/ --log-csv build/logs/phploc.csv'
 
                 // Archive PHPLOC CSV file as a build artifact
                 archiveArtifacts artifacts: 'build/logs/phploc.csv', allowEmptyArchive: true
