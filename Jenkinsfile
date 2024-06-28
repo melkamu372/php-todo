@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    environment {
+        PHPUNIT_VERSION = '7.*' // Replace with the version compatible with your Laravel version
+    }
     stages {
         stage("Initial Cleanup") {
             steps {
@@ -50,7 +52,12 @@ pipeline {
                 sh './vendor/bin/phpunit'
             }
         }
-    }
+      
+        stage('Code Analysis') {
+            steps {
+               sh 'phploc app/ --log-csv build/logs/phploc.csv'
 
-   
+            }
+        }
+    }
 }
