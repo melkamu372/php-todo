@@ -53,9 +53,10 @@ pipeline {
             }
         }
 
-        stage('Install PHPLOC') {
+        stage('Download PHPLOC') {
             steps {
-                sh 'composer global require sebastian/phploc'
+                sh 'wget -O phploc.phar https://phar.phpunit.de/phploc.phar'
+                sh 'chmod +x phploc.phar'
             }
         }
 
@@ -69,7 +70,7 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 // Execute PHPLOC for code analysis
-                sh '~/.composer/vendor/bin/phploc app/ --log-csv build/logs/phploc.csv'
+                sh './phploc.phar app/ --log-csv build/logs/phploc.csv'
 
                 // Archive PHPLOC CSV file as a build artifact
                 archiveArtifacts artifacts: 'build/logs/phploc.csv', allowEmptyArchive: true
