@@ -49,7 +49,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 // Execute PHPUnit tests
-                sh './vendor/bin/phpunit'
+                sh './vendor/bin/phpunit --no-coverage'
             }
         }
       
