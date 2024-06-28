@@ -37,7 +37,8 @@ pipeline {
             steps {
                 dir("${WORKSPACE}") {
                     // Ensure Laravel storage directories exist
-                    sh 'mkdir -p storage/framework/{sessions,cache}'
+                    sh 'mkdir -p storage/framework/sessions'
+                    sh 'mkdir -p storage/framework/cache'
                     sh 'chmod -R 777 storage' // Adjust permissions as needed for your environment
                 }
             }
