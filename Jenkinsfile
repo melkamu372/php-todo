@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        PHPUNIT_VERSION = '7.*' // Replace with the version compatible with your Laravel version
+        PHPUNIT_VERSION = '7.5.20' // Replace with the desired PHPUnit version
     }
     stages {
         stage("Initial Cleanup") {
@@ -59,11 +59,14 @@ pipeline {
                 sh './phpunit --configuration phpunit.xml'
             }
         }
-      
+
         stage('Code Analysis') {
             steps {
-               sh 'phploc app/ --log-csv build/logs/phploc.csv'
+                // Execute PHPLOC for code analysis
+                sh 'phploc app/ --log-csv build/logs/phploc.csv'
 
+                // Archive PHPLOC CSV file as a build artifact
+                archiveArtifacts artifacts: 'build/logs/phploc.csv', allowEmptyArchive: true
             }
         }
     }
