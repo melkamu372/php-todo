@@ -138,5 +138,29 @@ pipeline {
                 }
             }
         }
+
+        stage('Package Artifact') {
+            steps {
+                sh 'zip -qr php-todo.zip ${WORKSPACE}/*'
+                archiveArtifacts artifacts: 'php-todo.zip', allowEmptyArchive: false
+            }
+        }
+
+        stage('Upload to Artifactory') {
+            steps {
+                script {
+                    def server = Artifactory.server 'my-artifactory-server'
+                    def uploadSpec = """{
+                        "files": [
+                            {
+                                "pattern": "php-todo.zip",
+                                "target": "libs-release-local/php-todo/${env.BUILD_NUMBER}/"
+                            }
+                        ]
+                    }"""
+                    server.upload(uploadSpec)
+                }
+            }
+        }
     }
 }
