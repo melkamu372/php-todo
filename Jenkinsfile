@@ -28,7 +28,7 @@ pipeline {
                     sh 'php artisan db:seed --force'
 
                     // Generate application key if not already set
-                    sh 'php artisan key:generate --force'
+                    sh 'php artisan key:generate'
                 }
             }
         }
