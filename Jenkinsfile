@@ -146,6 +146,15 @@ pipeline {
             }
         }
 
+        stage('SonarQube Quality Gate') {
+            steps {
+                withSonarQubeEnv('My SonarQube Server') {
+                    sh "${SONARQUBE_SCANNER}/bin/sonar-scanner"
+                }
+            }
+        }
+    
+
         stage('Upload to Artifactory') {
             steps {
                 script {
