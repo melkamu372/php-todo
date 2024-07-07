@@ -161,22 +161,22 @@ pipeline {
             }
         }
     
-        stage('Upload to Artifactory') {
-            steps {
-                script {
-                    def server = Artifactory.server 'my-artifactory-server'
-                    def uploadSpec = """{
-                        "files": [
-                            {
-                                "pattern": "php-todo.zip",
-                                "target": "libs-release-local/php-todo/${env.BUILD_NUMBER}/"
-                            }
-                        ]
-                    }"""
-                    server.upload(uploadSpec)
-                }
-            }
-        }
+        // stage('Upload to Artifactory') {
+        //     steps {
+        //         script {
+        //             def server = Artifactory.server 'my-artifactory-server'
+        //             def uploadSpec = """{
+        //                 "files": [
+        //                     {
+        //                         "pattern": "php-todo.zip",
+        //                         "target": "libs-release-local/php-todo/${env.BUILD_NUMBER}/"
+        //                     }
+        //                 ]
+        //             }"""
+        //             server.upload(uploadSpec)
+        //         }
+        //     }
+        // }
 
         stage ('Deploy to Dev Environment') {
             steps {
