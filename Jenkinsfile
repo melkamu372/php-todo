@@ -155,46 +155,46 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     sh "${scannerHome}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
                 }
-                // timeout(time: 1, unit: 'MINUTES') {
-                //     waitForQualityGate abortPipeline: true
-                // }
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     
-        // stage('Upload to Artifactory') {
-        //     steps {
-        //         script {
-        //             def server = Artifactory.server 'my-artifactory-server'
-        //             def uploadSpec = """{
-        //                 "files": [
-        //                     {
-        //                         "pattern": "php-todo.zip",
-        //                         "target": "libs-release-local/php-todo/${env.BUILD_NUMBER}/"
-        //                     }
-        //                 ]
-        //             }"""
-        //             server.upload(uploadSpec)
-        //         }
-        //     }
-        // }
+        stage('Upload to Artifactory') {
+            steps {
+                script {
+                    def server = Artifactory.server 'my-artifactory-server'
+                    def uploadSpec = """{
+                        "files": [
+                            {
+                                "pattern": "php-todo.zip",
+                                "target": "libs-release-local/php-todo/${env.BUILD_NUMBER}/"
+                            }
+                        ]
+                    }"""
+                    server.upload(uploadSpec)
+                }
+            }
+        }
         stage ('Deploy to Dev Environment') {
-            // agent { label 'slave_one' }
+            agent { label 'slave_one' }
             steps {
                 build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
             }
         }
 
         stage ('Deploy to Test Environment') {
-            // agent { label 'slave_two' } 
+            agent { label 'slave_two' } 
             steps {
-                build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
+                build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'pentest']], propagate: false, wait: true
             }
         }
 
         stage ('Deploy to Production Environment') {
-            // agent any
+            agent any
             steps {
-                build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
+                build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'ci']], propagate: false, wait: true
             }
         }
     }
