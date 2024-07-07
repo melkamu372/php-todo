@@ -178,21 +178,21 @@ pipeline {
         //     }
         // }
         stage ('Deploy to Dev Environment') {
-            agent { label 'slave_one' }
+            // agent { label 'slave_one' }
             steps {
                 build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
             }
         }
 
         stage ('Deploy to Test Environment') {
-            agent { label 'slave_two' } 
+            // agent { label 'slave_two' } 
             steps {
                 build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
             }
         }
 
         stage ('Deploy to Production Environment') {
-            agent any
+            // agent any
             steps {
                 build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
             }
